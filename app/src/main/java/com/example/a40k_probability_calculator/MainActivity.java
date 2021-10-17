@@ -11,4 +11,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
+    // compares strength vs. toughness. Returns the WoundRoll value.
+    public static int StrvTgh(int s, int t){
+        if(s == t){
+            return 4;
+        }else if (s*2 > t){
+            return 2;
+        }else if(s > t){
+            return 3;
+        }else if(s < t*2){
+            return 6;
+        }else if(s < t){
+            return 5;
+        }else{
+            //TODO
+            //error handling goes here
+            return -1;
+        }
+    }
 }
