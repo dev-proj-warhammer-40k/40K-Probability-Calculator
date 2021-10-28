@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Global variables
     int attacks;
-    double skill;
+    int skill;
     double hits;
     int strength;
     int toughness;
@@ -99,15 +99,15 @@ public class MainActivity extends AppCompatActivity {
         } else if(minusOneCheckBox.isChecked()){
             skill++;
         }
-
-        //ModifierConvert(skill); TODO: uncomment when ModifierConvert is implemented
+        double modSkill;
+        modSkill = ModifierConvert(skill); //TODO: uncomment when ModifierConvert is implemented
 
         // check if reroll ones modifier radio is ticked
         if(rerollOnesCheckBox.isChecked()){
-            skill += 0.16;
+            modSkill += 0.16;
         }
 
-        return skill * attacks;
+        return modSkill * attacks;
     }
 
     // compares strength vs. toughness. Returns the WoundRoll value.
@@ -127,5 +127,27 @@ public class MainActivity extends AppCompatActivity {
             //error handling goes here
             return -1;
         }
+    }
+
+    //ModiferConvert
+    public static double ModifierConvert (int Mod) {
+
+        switch(Mod) {
+            case 1:
+
+            case 2:
+                return .83;
+            case 3:
+                return .66;
+            case 4:
+                return .5;
+            case 5:
+                return .33;
+            case 6:
+
+            case 7:
+                return .16;
+        }
+        return 0;
     }
 }
