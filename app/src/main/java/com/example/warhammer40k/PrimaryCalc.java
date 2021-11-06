@@ -145,7 +145,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
                 toughness = Integer.valueOf(toughnessInput.getText().toString());
                 armPen = Integer.valueOf(armPenInput.getText().toString());
                 armSave = Integer.valueOf(armSaveInput.getText().toString());
-                damage = Integer.valueOf(damageInput.getText().toString());
+                //damage = Integer.valueOf(damageInput.getText().toString());
 
                 ToHit();
                 ToWound();
@@ -217,10 +217,64 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
     // Calculates final damage statistic
     public void Damage() {
 
-        //TODO: SPINNER SELECTION PROCESSING
-        //RETURNS ARRAY INDEX - USE FOR SWITCH CASE:
-        damageSpinner.getSelectedItemPosition();
-        ///////////////////////////////////////////////
+        // Spinner selected array indexes
+        int damageCase = damageSpinner.getSelectedItemPosition();
+        int damageModCase = damageModSpinner.getSelectedItemPosition();
+        Log.i("damage case = ","" + damageCase);
+        Log.i("damage mod case = ","" + damageModCase);
+
+            switch(damageCase) {
+                case 1:
+                case 5:
+                    damage = 2;
+                    break;
+                case 2:
+                    damage = 3;
+                    break;
+                case 3:
+                case 6:
+                case 7:
+                    damage = 4;
+                    break;
+                case 4:
+                    damage = 5;
+                    break;
+                case 8:
+                    damage = 7;
+                    break;
+                default:
+                    damage = 1;
+                    break;
+            }
+            Log.i("damageCase returns: ","" + damage);
+
+            switch (damageModCase){
+                case 1:
+                    break;
+                case 2:
+                    damage += 1;
+                    break;
+                case 3:
+                    damage += 2;
+                    break;
+                case 4:
+                    damage += 3;
+                    break;
+                case 5:
+                    damage += 4;
+                    break;
+                case 6:
+                    damage += 5;
+                    break;
+                default:
+                    damage += -1;
+                    break;
+        }
+        Log.i("damageModCase returns: ","" + damage);
+
+        if(damage == 0){
+            damage = 1;
+        }
 
         if(invulnSaveCheckBox.isChecked()) {
             invulnSave = Integer.valueOf(invulnSaveInput.getText().toString());
@@ -237,14 +291,17 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
             wounds *= 1 - ModifierConvert(invulnSave);
         }
 
+        damage *= wounds;
+
         if(feelNoPainCheckBox.isChecked()){
             Log.i("Damage","FNP checked");
             feelNoPain = Integer.valueOf(feelNoPainInput.getText().toString());
-            wounds *= 1 - ModifierConvert(feelNoPain);
+            damage *= 1 - ModifierConvert(feelNoPain);
         }
-        finalDamage = wounds;
+        finalDamage = damage;
         Log.i("Damage", "Damage calculates: finalDamage = " + finalDamage);
     }
+
 
     // compares strength vs. toughness. Returns the wounds value.
     public static int StrvTgh(int s, int t) {
