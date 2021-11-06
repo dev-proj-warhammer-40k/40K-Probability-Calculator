@@ -223,6 +223,31 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         Log.i("damage case = ","" + damageCase);
         Log.i("damage mod case = ","" + damageModCase);
 
+        // Map damageSpinner index onto actual damage value
+        if(damageCase > -1 && damageCase < 5){
+            damage += 1;
+        }else if (damageCase == 5){
+            damage = 2;
+        }else if (damageCase == 6 || damageCase == 7){
+            damage = 4;
+        }else if (damageCase == 8){
+            damage = 7;
+        }else{
+            Log.e("Damage","damageCase out of range!");
+        }
+        Log.i("Damage","damageCase returns: " + damage);
+
+        // Map damageModSpinner index onto actual damage value
+        if(damageModCase == -1){
+            damage += -1;
+        }else if(damageModCase > -1 && damageModCase < 9){
+            damage += damageModCase - 1;
+        }else{
+            Log.e("Damage","damageModCase out of range!");
+        }
+        Log.i("Damage","damageModCase returns: " + damage);
+
+        /*
             switch(damageCase) {
                 case 1:
                 case 5:
@@ -271,7 +296,9 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
                     break;
         }
         Log.i("damageModCase returns: ","" + damage);
+         */
 
+        // damage cannot be 0, map to 1
         if(damage == 0){
             damage = 1;
         }
