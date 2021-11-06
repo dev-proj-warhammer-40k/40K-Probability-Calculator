@@ -1,4 +1,4 @@
-package com.example.a40k_probability_calculator;
+package com.example.warhammer40k;
 
 import org.junit.Test;
 

@@ -6,117 +6,102 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <CheckBox
-        android:id="@+id/minusOneCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="-1 modifier?"
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="368dp"
+        android:layout_height="54dp"
+        android:text="Warhammer 40k 9th Edition"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.279"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.379" />
+        app:layout_constraintVertical_bias="0.09" />
 
-    <EditText
-        android:id="@+id/toughnessInput"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="toughness"
-        android:inputType="number"
+        android:layout_marginTop="12dp"
+        android:text="Choose Your Version:"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.126"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/switch2"
+        android:layout_width="367dp"
+        android:layout_height="34dp"
+        android:text="Toggle Quick Tips"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.522"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/strengthInput"
-        app:layout_constraintVertical_bias="0.099" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.417" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Optimization Settings"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.126"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.277" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="367dp"
+        android:layout_height="34dp"
+        android:text="Toggle Dark Mode"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.522"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.345" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="283dp"
+        android:layout_height="42dp"
+        android:text="View Terms And Definitions"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.179"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.489" />
 
     <Button
-        android:id="@+id/toHitTestButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Test ToHit"
+        android:id="@+id/button2"
+        android:layout_width="370dp"
+        android:layout_height="54dp"
+        android:text="Warhammer 40k X Edition (Legacy)"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.268"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/strvTghTestButton"
-        app:layout_constraintVertical_bias="0.208" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.169" />
 
     <Button
-        android:id="@+id/strvTghTestButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="144dp"
-        android:text="test StrvTgh"
+        android:id="@+id/button4"
+        android:layout_width="89dp"
+        android:layout_height="45dp"
+        android:text="View"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/strengthInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="strength"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.581" />
-
-    <EditText
-        android:id="@+id/skillInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="skill"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/strengthInput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/attacksInput"
-        app:layout_constraintVertical_bias="0.095" />
-
-    <EditText
-        android:id="@+id/attacksInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="attacks"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/strengthInput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.132" />
-
-    <CheckBox
-        android:id="@+id/plusOneCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+1 modifier?"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.508"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.27" />
-
-    <CheckBox
-        android:id="@+id/rerollOnesCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reroll ones?"
-        app:layout_constraintBottom_toTopOf="@+id/strengthInput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/minusOneCheckBox" />
+        app:layout_constraintVertical_bias="0.473" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

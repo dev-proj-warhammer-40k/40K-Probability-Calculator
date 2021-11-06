@@ -6,8 +6,8 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.a40k_probability_calculator"
-        minSdk 21
+        applicationId "com.example.warhammer40k"
+        minSdk 16
         targetSdk 31
         versionCode 1
         versionName "1.0"

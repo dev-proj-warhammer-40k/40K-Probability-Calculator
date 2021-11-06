@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">40K-Probability-Calculator</string>
+    <string name="app_name">Warhammer40K</string>
+
+    <string-array name="damageNum">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>1d3</item>
+        <item>1d6</item>
+        <item>2d3</item>
+        <item>2d6</item>
+    </string-array>
+
+    <string-array name="damageModNum">
+        <item>-1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+
+    </string-array>
 </resources>
