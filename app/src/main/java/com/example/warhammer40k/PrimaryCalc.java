@@ -29,7 +29,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
     double wounds;
     double finalDamage;
 
-    // Global text boxes
+    // Text box variables
     EditText attacksInput;
     EditText skillInput;
     EditText strengthInput;
@@ -40,7 +40,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
     EditText feelNoPainInput;
     EditText damageInput;
 
-    // Global buttons
+    // Button variables
     CheckBox toHitPlusOneCheckBox;
     CheckBox toHitMinusOneCheckBox;
     CheckBox toHitRerollOnesCheckBox;
@@ -50,6 +50,11 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
     CheckBox invulnSaveCheckBox;
     CheckBox feelNoPainCheckBox;
     Button calculateButton;
+    Button backButton;
+
+    // Spinner variables
+    Spinner damageSpinner;
+    Spinner damageModSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +102,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
 
     private void configureSpinners(){
         //Spinner for damage
-        Spinner damageSpinner = findViewById(R.id.damageSpinner);
+        damageSpinner = findViewById(R.id.damageSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.damageNum, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         damageSpinner.setAdapter(adapter);
@@ -105,7 +110,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
 
 
         //Spinner for damageMod
-        Spinner damageModSpinner = findViewById(R.id.damageModSpinner);
+        damageModSpinner = findViewById(R.id.damageModSpinner);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.damageModNum, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         damageModSpinner.setAdapter(adapter2);
@@ -113,7 +118,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
     }
 
     private void configureBackButton(){
-        Button backButton = (Button) findViewById(R.id.backButton);
+        backButton = (Button) findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,6 +210,11 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
 
     // Calculates final damage statistic
     public void Damage() {
+
+        //TODO: SPINNER SELECTION PROCESSING
+        //RETURNS ARRAY INDEX - USE FOR SWITCH CASE:
+        damageSpinner.getSelectedItemPosition();
+        ///////////////////////////////////////////////
 
         if(invulnSaveCheckBox.isChecked()) {
             invulnSave = Integer.valueOf(invulnSaveInput.getText().toString());
