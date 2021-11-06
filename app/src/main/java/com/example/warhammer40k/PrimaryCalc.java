@@ -72,6 +72,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         // Spinner initializations
         configureSpinners();
 
+        Log.i("onCreate", "initializations complete...");
     }
 
     private void configureInputs(){
@@ -85,7 +86,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         invulnSaveInput = (EditText) findViewById(R.id.invulnSaveInput);
         feelNoPainInput = (EditText) findViewById(R.id.feelNoPainInput);
         damageInput = (EditText) findViewById(R.id.damageInput);
-        Log.i("onCreate", "text boxes initialized...");
+        Log.i("configureInputs", "text boxes initialized...");
     }
 
     private void configureCheckBoxes(){
@@ -97,7 +98,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         toWoundRerollOnesCheckBox = (CheckBox) findViewById(R.id.toWoundRerollOnesCheckBox);
         invulnSaveCheckBox = (CheckBox) findViewById(R.id.invulnSaveCheckBox);
         feelNoPainCheckBox = (CheckBox) findViewById(R.id.feelNoPainCheckBox);
-        Log.i("onCreate", "checkboxes initialized...");
+        Log.i("configureCheckBoxes", "checkboxes initialized...");
     }
 
     private void configureSpinners(){
@@ -107,6 +108,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         damageSpinner.setAdapter(adapter);
         damageSpinner.setOnItemSelectedListener(this);
+        Log.i("configureSpinners", "damageSpinner initialized...");
 
 
         //Spinner for damageMod
@@ -115,6 +117,8 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         damageModSpinner.setAdapter(adapter2);
         damageModSpinner.setOnItemSelectedListener(this);
+        Log.i("configureSpinners", "damageModSpinner initialized...");
+
     }
 
     private void configureBackButton(){
@@ -125,6 +129,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
                 finish();
             }
         });
+        Log.i("configureBackButton", "backButton initialized...");
         }
 
     private void configureCalculateButton(){
@@ -132,7 +137,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("onCreate", "\"calculate\" button pressed...");
+                Log.i("configCalculateButton", "\"calculate\" button pressed...");
 
                 attacks = Integer.valueOf(attacksInput.getText().toString());
                 skill = Integer.valueOf(skillInput.getText().toString());
@@ -148,6 +153,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
                 //TODO: DISPLAY RESULT
             }
         });
+        Log.i("configCalculateButton", "calculateButton initialized...");
     }
 
     @Override
