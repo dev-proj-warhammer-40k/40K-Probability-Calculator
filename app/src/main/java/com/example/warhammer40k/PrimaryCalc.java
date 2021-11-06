@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -151,6 +153,9 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
                 ToWound();
                 Damage();
                 //TODO: DISPLAY RESULT
+
+                historyActivity historyEntry = new historyActivity();
+                historyEntry.generateJson("" + attacks + skill + strength + toughness + armPen + armSave + damage);
             }
         });
         Log.i("configCalculateButton", "calculateButton initialized...");
@@ -284,6 +289,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         Log.e("ModifierConvert", "FAILURE: mod = " + mod);
         return -1;
     }
+
 }
 
 
