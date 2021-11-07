@@ -21,7 +21,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
     double hits;
     int strength;
     int toughness;
-    int damage;
+    double damage;
     int armPen;
     int armSave;
     int invulnSave = 100;
@@ -38,7 +38,6 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
     EditText armSaveInput;
     EditText invulnSaveInput;
     EditText feelNoPainInput;
-    EditText damageInput;
 
     // Button variables
     CheckBox toHitPlusOneCheckBox;
@@ -85,7 +84,6 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         armSaveInput = (EditText) findViewById(R.id.armSaveInput);
         invulnSaveInput = (EditText) findViewById(R.id.invulnSaveInput);
         feelNoPainInput = (EditText) findViewById(R.id.feelNoPainInput);
-        damageInput = (EditText) findViewById(R.id.damageInput);
         Log.i("configureInputs", "text boxes initialized...");
     }
 
@@ -216,7 +214,6 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
 
     // Calculates final damage statistic
     public void Damage() {
-
         // Spinner selected array indexes
         int damageCase = damageSpinner.getSelectedItemPosition();
         int damageModCase = damageModSpinner.getSelectedItemPosition();
@@ -225,7 +222,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
 
         // Map damageSpinner index onto actual damage value
         if(damageCase > -1 && damageCase < 5){
-            damage += 1;
+            damage = damageCase + 1;
         }else if (damageCase == 5){
             damage = 2;
         }else if (damageCase == 6 || damageCase == 7){
@@ -233,7 +230,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         }else if (damageCase == 8){
             damage = 7;
         }else{
-            Log.e("Damage","damageCase out of range!");
+            Log.e("Damage","damageCase out of range!" + damageCase);
         }
         Log.i("Damage","damageCase returns: " + damage);
 
@@ -243,60 +240,9 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         }else if(damageModCase > -1 && damageModCase < 9){
             damage += damageModCase - 1;
         }else{
-            Log.e("Damage","damageModCase out of range!");
+            Log.e("Damage","damageModCase out of range!" + damageModCase);
         }
         Log.i("Damage","damageModCase returns: " + damage);
-
-        /*
-            switch(damageCase) {
-                case 1:
-                case 5:
-                    damage = 2;
-                    break;
-                case 2:
-                    damage = 3;
-                    break;
-                case 3:
-                case 6:
-                case 7:
-                    damage = 4;
-                    break;
-                case 4:
-                    damage = 5;
-                    break;
-                case 8:
-                    damage = 7;
-                    break;
-                default:
-                    damage = 1;
-                    break;
-            }
-            Log.i("damageCase returns: ","" + damage);
-
-            switch (damageModCase){
-                case 1:
-                    break;
-                case 2:
-                    damage += 1;
-                    break;
-                case 3:
-                    damage += 2;
-                    break;
-                case 4:
-                    damage += 3;
-                    break;
-                case 5:
-                    damage += 4;
-                    break;
-                case 6:
-                    damage += 5;
-                    break;
-                default:
-                    damage += -1;
-                    break;
-        }
-        Log.i("damageModCase returns: ","" + damage);
-         */
 
         // damage cannot be 0, map to 1
         if(damage == 0){
@@ -327,46 +273,63 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         }
         finalDamage = damage;
         Log.i("Damage", "Damage calculates: finalDamage = " + finalDamage);
+
+        //TODO: REMOVE
+        Toast.makeText(this,"" + finalDamage,Toast.LENGTH_LONG).show();
     }
 
 
     // compares strength vs. toughness. Returns the wounds value.
     public static int StrvTgh(int s, int t) {
+        int result;
+
         if (s == t) {
-            return 4;
+            result = 4;
         } else if (s >= t * 2) {
-            return 2;
+            result =  2;
         } else if (s > t) {
-            return 3;
+            result = 3;
         } else if (s <= t / 2) {
-            return 6;
+            result =  6;
         } else if (s < t) {
-            return 5;
+            result = 5;
         } else {
             Log.e("StrvTgh", "COMPARISON FAILURE: s = " + s + "t = " + t);
             return -1;
         }
+
+        Log.i("StrvTgh", "StrvTgh returns: " + result);
+        return result;
     }
 
     //ModifierConvert
     public double ModifierConvert(int mod) {
+        double result;
 
         switch (mod) {
             case 1:
             case 2:
-                return .83;
+                result = .83;
+                break;
             case 3:
-                return .66;
+                result = .66;
+                break;
             case 4:
-                return .5;
+                result = .5;
+                break;
             case 5:
-                return .33;
+                result = .33;
+                break;
             case 6:
             case 7:
-                return .16;
+                result = .16;
+                break;
+            default:
+                Log.e("ModifierConvert", "FAILURE: mod = " + mod);
+                return -1;
         }
-        Log.e("ModifierConvert", "FAILURE: mod = " + mod);
-        return -1;
+        Log.i("ModifierConvert", "ModifierConvert returns: " + result);
+        return result;
     }
 }
 
