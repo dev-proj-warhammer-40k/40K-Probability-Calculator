@@ -249,20 +249,24 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
             damage = 1;
         }
 
-        if(invulnSaveCheckBox.isChecked()) {
-            invulnSave = Integer.valueOf(invulnSaveInput.getText().toString());
-        }
-
         armPen *= -1;
         armSave += armPen;
 
+        if(invulnSaveCheckBox.isChecked() && armSave >= invulnSave) {
+            invulnSave = Integer.valueOf(invulnSaveInput.getText().toString());
+            wounds *= 1 - ModifierConvert(invulnSave);
+        }else{
+            wounds *= 1- ModifierConvert(armSave);
+        }
+
+        /*
         if (armSave < invulnSave) {
             Log.i("Damage", "armSave < invulnSave");
             wounds *= 1- ModifierConvert(armSave);
         } else {
             Log.i("Damage","armSave >= invulnSave");
             wounds *= 1 - ModifierConvert(invulnSave);
-        }
+        }*/
 
         damage *= wounds;
 
