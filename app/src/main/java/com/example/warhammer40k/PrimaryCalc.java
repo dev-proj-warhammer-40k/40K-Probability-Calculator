@@ -149,13 +149,23 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
                 armSave = Integer.valueOf(armSaveInput.getText().toString());
                 damage = Integer.valueOf(damageInput.getText().toString());
 
+                historyActivity historyEntry = new historyActivity();
+
+                /*historyEntry.generateString(attacks, (int)skill, toHitRerollOnesCheckBox.isChecked(),
+                        toHitPlusOneCheckBox.isChecked(), toHitMinusOneCheckBox.isChecked(),
+                        strength, toughness, toWoundRerollOnesCheckBox.isChecked(),
+                        toWoundPlusOneCheckBox.isChecked(), toWoundMinusOneCheckBox.isChecked(),
+                        armSave, armPen, invulnSave, feelNoPain, invulnSaveCheckBox.isChecked(),
+                        feelNoPainCheckBox.isChecked(), finalDamage);*/
+
                 ToHit();
                 ToWound();
                 Damage();
+
+                historyEntry.AppendHistory(finalDamage);
                 //TODO: DISPLAY RESULT
 
-                historyActivity historyEntry = new historyActivity();
-                historyEntry.generateJson("" + attacks + skill + strength + toughness + armPen + armSave + damage);
+
             }
         });
         Log.i("configCalculateButton", "calculateButton initialized...");

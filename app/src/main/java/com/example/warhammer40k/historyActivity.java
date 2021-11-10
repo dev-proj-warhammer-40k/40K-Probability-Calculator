@@ -15,9 +15,10 @@ import java.nio.charset.StandardCharsets;
 
 public class historyActivity extends AppCompatActivity {
 
-    static String fileName = "historyLog";
+    static String fileName = "historyLog.txt";
     static String filePath = "historyLogDir";
     File file;
+    int entries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,18 +27,19 @@ public class historyActivity extends AppCompatActivity {
 
     }
 
-    public void AppendHistory(JSONObject entry){
+    public void AppendHistory(double entry){
         if(!ExternalStorageAvailable()){
             Log.e("appendHistory","external media not present");
             Log.i("appendHistory","skipping append to history log");
             return;
         }
 
-        file = new File(getExternalFilesDir(filePath), fileName);
+        //file = new File(getExternalFilesDir(filePath), fileName);
         try {
-            FileOutputStream fos = new FileOutputStream(file, true);
-            fos.write(entry.toString().getBytes());
-            fos.close();
+            FileOutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory().getAbsolutePath()+"/historyLog.txt");
+            //FileOutputStream out = new FileOutputStream(fileName, true);
+            out.write(String.valueOf(entry).getBytes());
+            out.close();
         }catch (IOException e){
             Log.e("appendHistory","unable to append history file");
         }
@@ -53,8 +55,20 @@ public class historyActivity extends AppCompatActivity {
         }
     }
 
-    public String generateJson(String entry){
-     JSONObject = 
-     return json;
+    public String generateString(int attacks, int skill, boolean arr1,
+                                 boolean ap1, boolean am1, int strength,
+                                 int toughness,  boolean wrr1, boolean wp1,
+                                 boolean wm1, int armSave, int armPen,
+                                 int invulnSave, int feelNoPain, boolean is,
+                                 boolean fnp, int finalDamage){
+
+        String result = "";
+        result = "" + attacks + ',' + skill + ',' + arr1 + ',' + ap1 + ',' +
+                 am1 + ',' + strength + ',' + toughness + ',' + wrr1 + ',' +
+                 wp1 + ',' + wm1 + ',' + armSave + ',' + armPen + ',' +
+                 invulnSave + ',' + feelNoPain + ',' + is + ',' + fnp + ',' +
+                 finalDamage;
+
+        return result;
     }
 }
