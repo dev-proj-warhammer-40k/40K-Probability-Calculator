@@ -1,6 +1,6 @@
 # 40K-Probability-Calculator
 
-##Installing Android Studio for Testing
+## Installing Android Studio for Testing
 1. Java must be installed. Check in terminal with [java --version] 
 2. Download Android Studio: https://developer.android.com/studio#downloads
 3. Launch the installer
