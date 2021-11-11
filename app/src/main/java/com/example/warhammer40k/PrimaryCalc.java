@@ -24,7 +24,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
     int strength;
     int toughness;
     int damage;
-    int armPen;
+    int armPen = 0;
     int armSave;
     int invulnSave = 100;
     int feelNoPain;
@@ -151,18 +151,19 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
 
                 historyActivity historyEntry = new historyActivity();
 
-                /*historyEntry.generateString(attacks, (int)skill, toHitRerollOnesCheckBox.isChecked(),
+                historyEntry.AppendHistory(getApplicationContext(),
+                historyEntry.generateString(attacks, (int)skill, toHitRerollOnesCheckBox.isChecked(),
                         toHitPlusOneCheckBox.isChecked(), toHitMinusOneCheckBox.isChecked(),
                         strength, toughness, toWoundRerollOnesCheckBox.isChecked(),
                         toWoundPlusOneCheckBox.isChecked(), toWoundMinusOneCheckBox.isChecked(),
                         armSave, armPen, invulnSave, feelNoPain, invulnSaveCheckBox.isChecked(),
-                        feelNoPainCheckBox.isChecked(), finalDamage);*/
+                        feelNoPainCheckBox.isChecked(), finalDamage)
+                );
 
                 ToHit();
                 ToWound();
                 Damage();
 
-                historyEntry.AppendHistory(finalDamage);
                 //TODO: DISPLAY RESULT
 
 
