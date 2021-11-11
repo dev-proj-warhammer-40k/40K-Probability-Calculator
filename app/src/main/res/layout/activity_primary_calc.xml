@@ -123,26 +123,12 @@
         app:layout_constraintVertical_bias="0.758" />
 
     <EditText
-        android:id="@+id/damageInput"
-        android:layout_width="107dp"
-        android:layout_height="43dp"
-        android:ems="10"
-        android:hint="Damage:"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.796"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.146" />
-
-    <EditText
         android:id="@+id/armPenInput"
         android:layout_width="107dp"
         android:layout_height="43dp"
         android:ems="10"
         android:hint="AP:"
-        android:inputType="number"
+        android:inputType="numberSigned|number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.444"
