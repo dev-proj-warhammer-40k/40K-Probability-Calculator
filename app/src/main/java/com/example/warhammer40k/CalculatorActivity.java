@@ -13,21 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-
-    // Global variables
-    int attacks;
-    double skill;
-    double hits;
-    int strength;
-    int toughness;
-    double damage;
-    int armPen;
-    int armSave;
-    int invulnSave = 100;
-    int feelNoPain;
-    double wounds;
-    double finalDamage;
+public class CalculatorActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     // Text box variables
     EditText attacksInput;
@@ -137,18 +123,42 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
             public void onClick(View v) {
                 Log.i("configCalculateButton", "\"calculate\" button pressed...");
 
-                attacks = Integer.valueOf(attacksInput.getText().toString());
-                skill = Integer.valueOf(skillInput.getText().toString());
-                strength = Integer.valueOf(strengthInput.getText().toString());
-                toughness = Integer.valueOf(toughnessInput.getText().toString());
-                armPen = Integer.valueOf(armPenInput.getText().toString());
-                armSave = Integer.valueOf(armSaveInput.getText().toString());
-                //damage = Integer.valueOf(damageInput.getText().toString());
+                //////////////////////////////////////////////////////////////////////////////
+                //////////////////////////////MAIN FUNCTIONALITY//////////////////////////////
+                //////////////////////////////////////////////////////////////////////////////
 
-                ToHit();
-                ToWound();
-                Damage();
+                // Declare new session object to hold user input and results
+                Session session = new Session();
+
+                // Read attacks & skill user inputs, and calculate number of hits
+                session.attacks = Integer.valueOf(attacksInput.getText().toString());
+                session.skill = Integer.valueOf(skillInput.getText().toString());
+                session.hits = ToHit(session.attacks, session.skill);
+
+                // Read stength & toughness user inputs, and calculate number of wounds
+                session.strength = Integer.valueOf(strengthInput.getText().toString());
+                session.toughness = Integer.valueOf(toughnessInput.getText().toString());
+                session.wounds = ToWound(session.strength, session.toughness, session.hits);
+
+                // Reads in indexes of damage spinners, and calculates initial damage
+                session.damage = DamageInput();
+
+                // Read saves & damage user inputs, and calculate final damage
+                session.armPen = Integer.valueOf(armPenInput.getText().toString());
+                session.armSave = Integer.valueOf(armSaveInput.getText().toString());
+                if(invulnSaveCheckBox.isChecked())
+                    session.invulnSave = Integer.valueOf(invulnSaveInput.getText().toString());
+                if(feelNoPainCheckBox.isChecked())
+                    session.feelNoPain = Integer.valueOf(feelNoPainInput.getText().toString());
+                session.finalDamage = FinalDamage(session.damage, session.armPen, session.armSave,
+                                        session.invulnSave, (int)session.wounds, session.feelNoPain);
+
+                //////////////////////////////////////////////////////////////////////////////
+                //////////////////////////////MAIN FUNCTIONALITY//////////////////////////////
+                //////////////////////////////////////////////////////////////////////////////
+
                 //TODO: DISPLAY RESULT
+                Toast.makeText(getApplicationContext(), "" + session.finalDamage, Toast.LENGTH_LONG).show();
             }
         });
         Log.i("configCalculateButton", "calculateButton initialized...");
@@ -166,7 +176,7 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
     }
 
     // takes the number of attacks and skill (user input), and calculates the number of hits
-    public void ToHit() {
+    public double ToHit(int attacks, int skill) {
         // make sure skill is in correct range
         if (skill < 2 || skill > 6) {
             Log.e("ToHit","SKILL NOT IN RANGE");
@@ -180,40 +190,45 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
         } else if (toHitMinusOneCheckBox.isChecked()) {
             skill++;
         }
-        skill = ModifierConvert((int)skill);
+        double result = ModifierConvert(skill);
 
         // check if reroll ones modifier radio is ticked
         if (toHitRerollOnesCheckBox.isChecked()) {
-            skill += 0.16;
+            result += 0.16;
         }
 
-        hits = skill * attacks;
-        Log.i("ToHit","ToHit calculates: hits = " + hits);
+        result *= attacks;
+        Log.i("ToHit","ToHit calculates: hits = " + result);
+        return result;
     }
 
-    public void ToWound(){
-        wounds = StrvTgh(strength, toughness);
+    public double ToWound(int strength, int toughness, double hits){
+        double result = StrvTgh(strength, toughness);
 
         if(toWoundPlusOneCheckBox.isChecked() && toWoundMinusOneCheckBox.isChecked()){
             //no modification takes place
         } else if(toWoundPlusOneCheckBox.isChecked()){
-            wounds--;
+            result--;
         } else if(toWoundMinusOneCheckBox.isChecked()){
-            wounds++;
+            result++;
         }
-        wounds = ModifierConvert((int)wounds);
+        result = ModifierConvert((int)result);
 
         // check if reroll ones modifier radio is ticked
         if(toWoundRerollOnesCheckBox.isChecked()) {
-            wounds += 0.16;
+            result += 0.16;
         }
 
-        wounds *= hits;
-        Log.i("ToWound","ToWound calculates: wounds = " + wounds);
+        result *= hits;
+        Log.i("ToWound","ToWound calculates: wounds = " + result);
+        return result;
     }
 
-    // Calculates final damage statistic
-    public void Damage() {
+    // Takes user input on damage spinner and damage modifier spinner, and returns the average
+    // damage based on those selections.
+    public int DamageInput(){
+        int result = -1;
+
         // Spinner selected array indexes
         int damageCase = damageSpinner.getSelectedItemPosition();
         int damageModCase = damageModSpinner.getSelectedItemPosition();
@@ -222,27 +237,34 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
 
         // Map damageSpinner index onto actual damage value
         if(damageCase > -1 && damageCase < 5){
-            damage = damageCase + 1;
+            result = damageCase + 1;
         }else if (damageCase == 5){
-            damage = 2;
+            result = 2;
         }else if (damageCase == 6 || damageCase == 7){
-            damage = 4;
+            result = 4;
         }else if (damageCase == 8){
-            damage = 7;
+            result = 7;
         }else{
-            Log.e("Damage","damageCase out of range!" + damageCase);
+            Log.e("DamageInput","damageCase out of range!" + damageCase);
         }
-        Log.i("Damage","damageCase returns: " + damage);
+        Log.i("DamageInput","damageCase returns: " + result);
 
         // Map damageModSpinner index onto actual damage value
         if(damageModCase == -1){
-            damage += -1;
+            result += -1;
         }else if(damageModCase > -1 && damageModCase < 9){
-            damage += damageModCase - 1;
+            result += damageModCase - 1;
         }else{
-            Log.e("Damage","damageModCase out of range!" + damageModCase);
+            Log.e("DamageInput","damageModCase out of range!" + damageModCase);
         }
-        Log.i("Damage","damageModCase returns: " + damage);
+        Log.i("DamageInput","damageModCase returns: " + result);
+
+        return result;
+    }
+
+    // Calculates final damage statistic
+    public double FinalDamage(int damage, int armPen, int armSave, int invulnSave, int wounds, int feelNoPain) {
+        double result = -1;
 
         // damage cannot be 0, map to 1
         if(damage == 0){
@@ -259,15 +281,6 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
             wounds *= 1- ModifierConvert(armSave);
         }
 
-        /*
-        if (armSave < invulnSave) {
-            Log.i("Damage", "armSave < invulnSave");
-            wounds *= 1- ModifierConvert(armSave);
-        } else {
-            Log.i("Damage","armSave >= invulnSave");
-            wounds *= 1 - ModifierConvert(invulnSave);
-        }*/
-
         damage *= wounds;
 
         if(feelNoPainCheckBox.isChecked()){
@@ -275,11 +288,12 @@ public class PrimaryCalc extends AppCompatActivity implements AdapterView.OnItem
             feelNoPain = Integer.valueOf(feelNoPainInput.getText().toString());
             damage *= 1 - ModifierConvert(feelNoPain);
         }
-        finalDamage = damage;
-        Log.i("Damage", "Damage calculates: finalDamage = " + finalDamage);
+        result = damage;
+        Log.i("Damage", "Damage calculates: finalDamage = " + result);
 
-        //TODO: REMOVE
-        Toast.makeText(this,"" + finalDamage,Toast.LENGTH_LONG).show();
+        //TODO: REMOVE TOAST
+        Toast.makeText(this,"" + result,Toast.LENGTH_LONG).show();
+        return result;
     }
 
 
