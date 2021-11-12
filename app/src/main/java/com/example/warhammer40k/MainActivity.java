@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity  {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, PrimaryCalc.class));
+                    startActivity(new Intent(MainActivity.this, CalculatorActivity.class));
                     Log.i("configureNextButton", "9th edition selected...");
             }
         });

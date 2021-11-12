@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Warhammer40K">
         <activity
-            android:name=".PrimaryCalc"
+            android:name=".CalculatorActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
