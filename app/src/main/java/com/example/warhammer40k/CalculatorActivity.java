@@ -153,9 +153,10 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 session.finalDamage = FinalDamage(session.damage, session.armPen, session.armSave,
                                         session.invulnSave, (int)session.wounds, session.feelNoPain);
 
-                //////////////////////////////////////////////////////////////////////////////
-                //////////////////////////////MAIN FUNCTIONALITY//////////////////////////////
-                //////////////////////////////////////////////////////////////////////////////
+                // Create new entry for history.txt and append file
+                HistoryActivity historyEntry = new HistoryActivity();
+                historyEntry.entry = historyEntry.generateString(session);
+                historyEntry.AppendHistory(getApplicationContext());
 
                 //TODO: DISPLAY RESULT
                 Toast.makeText(getApplicationContext(), "" + session.finalDamage, Toast.LENGTH_LONG).show();
