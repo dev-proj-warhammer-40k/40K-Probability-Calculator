@@ -11,10 +11,14 @@ import org.json.JSONObject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
@@ -22,12 +26,34 @@ public class HistoryActivity extends AppCompatActivity {
 
     static String fileName = "history.txt";
     String entry = "";
+    String file = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+    }
+
+    // Reads history.txt into a string for application processing
+    public void ReadHistory(Context context){
+        FileInputStream input = null;
+
+        try {
+            input = context.openFileInput(fileName);
+            InputStreamReader fileReader = new InputStreamReader(input);
+            BufferedReader fileBuffer = new BufferedReader(fileReader);
+            StringBuilder fileBuilder = new StringBuilder();
+
+            while((file = fileBuffer.readLine()) != null){
+                fileBuilder.append(file).append("\n");
+            }
+            Log.i("ReadHistory", "File contents: \n" + fileBuilder.toString());
+        } catch (FileNotFoundException e) {
+            Log.e("ReadHistory", "ERROR: FILE NOT FOUND! " + e);
+        } catch (IOException e) {
+            Log.e("ReadHistory", "ERROR: IOException! " + e);
+        }
     }
 
     public void AppendHistory(Context context) {
@@ -51,6 +77,9 @@ public class HistoryActivity extends AppCompatActivity {
                 }
             }
         }
+
+        //TODO: remove, for testing only
+        ReadHistory(context);
 
     }
 
