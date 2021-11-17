@@ -23,4 +23,20 @@
         <item>5</item>
 
     </string-array>
+
+    <string-array name="definitions">
+        <item>Attack</item>
+        <item>Armor Saving Throw</item>
+        <item>Armor Penetration (AP)</item>
+        <item>Damage Roll</item>
+        <item>Feel No Pain</item>
+        <item>Hits</item>
+        <item>Invulnerable Saving Throw</item>
+        <item>Random Damage</item>
+        <item>Skill</item>
+        <item>Strength</item>
+        <item>Toughness</item>
+        <item>Wounds</item>
+    </string-array>
+
 </resources>

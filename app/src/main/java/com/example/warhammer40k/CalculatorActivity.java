@@ -9,8 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class CalculatorActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -40,6 +42,14 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     // Spinner variables
     Spinner damageSpinner;
     Spinner damageModSpinner;
+
+    //Declaring variables for popup window
+    private AlertDialog.Builder DB;
+    private AlertDialog dialog;
+    private TextView based, result;
+    private Button saveResult, resetFields;
+
+    Session session = new Session();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +138,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 //////////////////////////////////////////////////////////////////////////////
 
                 // Declare new session object to hold user input and results
-                Session session = new Session();
+                //Session session = new Session();
 
                 // Read attacks & skill user inputs, and calculate number of hits
                 session.attacks = Integer.valueOf(attacksInput.getText().toString());
@@ -159,6 +169,8 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
 
                 //TODO: DISPLAY RESULT
                 Toast.makeText(getApplicationContext(), "" + session.finalDamage, Toast.LENGTH_LONG).show();
+
+                createNewContactDialog();
             }
         });
         Log.i("configCalculateButton", "calculateButton initialized...");
@@ -349,6 +361,40 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         Log.i("ModifierConvert", "ModifierConvert returns: " + result);
         return result;
     }
+
+    public void createNewContactDialog(){
+        DB = new AlertDialog.Builder(this);
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.popup, null);
+        based = (TextView) contactPopupView.findViewById(R.id.based);
+        result = (TextView) contactPopupView.findViewById(R.id.result);
+
+
+        saveResult = (Button) contactPopupView.findViewById(R.id.saveResult);
+        resetFields = (Button) contactPopupView.findViewById(R.id.resetFields);
+
+        DB.setView(contactPopupView);
+        dialog = DB.create();
+        dialog.show();
+
+
+        saveResult.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //define save button to save into SAVED RESULTS
+            }
+        });
+        resetFields.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //define reset fields button to reset ALL FIELDS in calculator
+            }
+        });
+        //result = "Result "+ result.setText(toString(session.finalDamage));
+
+    }
+
+
 }
 
 

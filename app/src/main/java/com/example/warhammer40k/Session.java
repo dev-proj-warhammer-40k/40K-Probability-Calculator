@@ -9,7 +9,7 @@ public class Session {
     int toughness;
     int armPen;
     int armSave;
-    int invulnSave = 100;
+    int invulnSave;
     int feelNoPain;
 
     // Results
