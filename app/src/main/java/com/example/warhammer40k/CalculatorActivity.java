@@ -130,6 +130,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 // Declare new session object to hold user input and results
                 Session session = new Session();
 
+
                 // Read attacks & skill user inputs, and calculate number of hits
                 session.attacks = Integer.valueOf(attacksInput.getText().toString());
                 session.skill = Integer.valueOf(skillInput.getText().toString());
@@ -178,6 +179,8 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
 
     // takes the number of attacks and skill (user input), and calculates the number of hits
     public double ToHit(int attacks, int skill) {
+        double result = -1;
+
         // make sure skill is in correct range
         if (skill < 2 || skill > 6) {
             Log.e("ToHit","SKILL NOT IN RANGE");
@@ -191,7 +194,11 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         } else if (toHitMinusOneCheckBox.isChecked()) {
             skill++;
         }
-        double result = ModifierConvert(skill);
+
+        if(skill >= 6)
+            result = 0.16;
+        else
+            result = ModifierConvert(skill);
 
         // check if reroll ones modifier radio is ticked
         if (toHitRerollOnesCheckBox.isChecked()) {
@@ -213,7 +220,11 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         } else if(toWoundMinusOneCheckBox.isChecked()){
             result++;
         }
-        result = ModifierConvert((int)result);
+
+        if(result >= 6)
+            result = 0.16;
+        else
+            result = ModifierConvert((int)result);
 
         // check if reroll ones modifier radio is ticked
         if(toWoundRerollOnesCheckBox.isChecked()) {
@@ -258,8 +269,9 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         }else{
             Log.e("DamageInput","damageModCase out of range!" + damageModCase);
         }
-        Log.i("DamageInput","damageModCase returns: " + result);
+        Log.i("DamageInput","damageModCase returns: " + damageModCase);
 
+        Log.i("DamageInput","DamageInput returns: " + result);
         return result;
     }
 
@@ -283,9 +295,10 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         }
 
         damage *= wounds;
+        Log.i("FinalDamage","damage: " + damage);
 
         if(feelNoPainCheckBox.isChecked()){
-            Log.i("Damage","FNP checked");
+            Log.i("FinalDamage","FNP checked");
             feelNoPain = Integer.valueOf(feelNoPainInput.getText().toString());
             damage *= 1 - ModifierConvert(feelNoPain);
         }
@@ -325,6 +338,9 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     public double ModifierConvert(int mod) {
         double result;
 
+        if(mod >= 7)
+            return 0;
+
         switch (mod) {
             case 1:
             case 2:
@@ -340,14 +356,13 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 result = .33;
                 break;
             case 6:
-            case 7:
                 result = .16;
                 break;
             default:
-                Log.e("ModifierConvert", "FAILURE: mod = " + mod);
-                return -1;
+                Log.e("ModifierConvert", "'Mod' Out of range! " + mod);
+                result = -1;
         }
-        Log.i("ModifierConvert", "ModifierConvert returns: " + result);
+        Log.i("ModifierConvert", "ModifierConvert " + mod + " returns: " + result);
         return result;
     }
 }
