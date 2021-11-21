@@ -117,6 +117,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         Log.i("configureBackButton", "backButton initialized...");
         }
 
+        // This button triggers all of the user input retrieval, input error handling, and calculator function calls
     private void configureCalculateButton(){
         calculateButton = (Button) findViewById(R.id.calculateButton);
         calculateButton.setOnClickListener(new View.OnClickListener() {
@@ -131,53 +132,54 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 // Declare new session object to hold user input and results
                 Session session = new Session();
 
-                // Read attacks & skill user inputs, and calculate number of hits
-                session.attacks = CheckInput(attacksInput, 1, 500);
-                if(session.attacks == -2) {
-                    Toast.makeText(getApplicationContext(), "Attacks input must be between 1 and 500!", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                session.skill = CheckInput(skillInput, 2, 6);
-                if(session.skill == -2) {
-                    Toast.makeText(getApplicationContext(), "Skill input must be between 1 and 6!", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
+                // Read attacks & skill user inputs, and calculate number of hits.
+                session.attacks = ProcessUserInput(attacksInput, "Attacks", 1, 500);
+                if(session.attacks == -10)
+                    return; // Ends calculation if input is out of bounds (-10 is an error code)
+                session.skill = ProcessUserInput(skillInput, "Skills", 2, 6);
+                if(session.skill == -10)
+                    return; // Ends calculation if input is out of bounds (-10 is an error code)
                 session.hits = ToHit(session.attacks, session.skill);
 
 
                 // Read stength & toughness user inputs, and calculate number of wounds
-                session.strength = CheckInput(strengthInput, 1, 16);
-                if(session.strength == -2) {
-                    Toast.makeText(getApplicationContext(), "Strength input must be between 1 and 16!", Toast.LENGTH_LONG).show();
+                session.strength = ProcessUserInput(strengthInput, "Strength", 1, 16);
+                if(session.strength == -10)
                     return;
-                }
-
-                session.strength = CheckInput(strengthInput, 1, 16);
-                if(session.strength == -2) {
-                    Toast.makeText(getApplicationContext(), "Strength input must be between 1 and 16!", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-
-                session.toughness = Integer.valueOf(toughnessInput.getText().toString());
+                session.toughness = ProcessUserInput(toughnessInput, "Toughness", 1, 16);
+                if(session.toughness == -10)
+                    return; // Ends calculation if input is out of bounds (-10 is an error code)
                 session.wounds = ToWound(session.strength, session.toughness, session.hits);
+
+                // Read saves & damage user inputs, and calculate final damage
+                session.armSave = ProcessUserInput(armSaveInput, "Armor Save", 2, 6);
+                if(session.armSave == -10)
+                    return; // Ends calculation if input is out of bounds (-10 is an error code)
+                session.armPen = ProcessUserInput(armPenInput, "Armor Penetration", -5, 0);
+                if(session.armPen == -10)
+                    return; // Ends calculation if input is out of bounds (-10 is an error code)
 
                 // Reads in indexes of damage spinners, and calculates initial damage
                 session.damage = DamageInput();
 
-                // Read saves & damage user inputs, and calculate final damage
-                session.armPen = Integer.valueOf(armPenInput.getText().toString());
-                session.armSave = Integer.valueOf(armSaveInput.getText().toString());
-                if(invulnSaveCheckBox.isChecked())
-                    session.invulnSave = Integer.valueOf(invulnSaveInput.getText().toString());
-                if(feelNoPainCheckBox.isChecked())
-                    session.feelNoPain = Integer.valueOf(feelNoPainInput.getText().toString());
+                // Invulnerable save and feel no pain are optional. Checks inputs depending on user selection.
+                if(invulnSaveCheckBox.isChecked()) {
+                    session.invulnSave = ProcessUserInput(invulnSaveInput, "Invulnerable Save", 2, 6);
+                    if(session.invulnSave == -10)
+                        return; // Ends calculation if input is out of bounds (-10 is an error code)
+                }
+                if(feelNoPainCheckBox.isChecked()){
+                    session.feelNoPain = ProcessUserInput(feelNoPainInput, "Feel No Pain", 2, 6);
+                    if(session.invulnSave == -10)
+                        return; // Ends calculation if input is out of bounds (-10 is an error code)
+                }
+
+                // Calculates the final damage based on user inputs
                 session.finalDamage = FinalDamage(session.damage, session.armPen, session.armSave,
                                         session.invulnSave, (int)session.wounds, session.feelNoPain);
 
-                // Create new entry for history.txt and append file
+
+                // Create new entry for history.txt and append file (for history logging feature)
                 HistoryActivity historyEntry = new HistoryActivity();
                 historyEntry.entry = historyEntry.generateString(session);
                 historyEntry.AppendHistory(getApplicationContext());
@@ -389,17 +391,22 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         return result;
     }
 
-    // Checks text input against null and input parameters. Returns -2 if null or out of range.
-    // Otherwise the actual input is returned
-    public int CheckInput(EditText input, int min, int max){
+    // Wrapper function that checks text input against null and min/max parameters. Returns -10 if null or out of range (-10 is never used in the input fields).
+    // Otherwise the actual input is returned to the caller
+    public int ProcessUserInput(EditText input, String msg, int min, int max){
         if(TextUtils.isEmpty(input.getText().toString().trim())) {
-            return -2;
+            Toast.makeText(getApplicationContext(), msg + " input is empty!", Toast.LENGTH_LONG).show();
+            Log.e("ProcessUserInput", msg + " input is empty!");
+            return -10;
         }
 
         int result = Integer.valueOf(input.getText().toString().trim());
         if(result < min || result > max){
-            return -2;
+            Toast.makeText(getApplicationContext(), msg + " input must be between " + min + " and " + max + "!", Toast.LENGTH_LONG).show();
+            Log.e("ProcessUserInput", msg + " input must be between " + min + " and " + max + "!");
+            return -10;
         }
+        Log.i("ProcessUserInput", msg + " input processed. Result: " + result);
         return result;
     }
 }
