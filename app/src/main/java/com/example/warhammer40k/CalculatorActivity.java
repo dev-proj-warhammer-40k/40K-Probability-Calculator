@@ -1,6 +1,7 @@
 package com.example.warhammer40k;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -130,14 +131,36 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 // Declare new session object to hold user input and results
                 Session session = new Session();
 
-
                 // Read attacks & skill user inputs, and calculate number of hits
-                session.attacks = Integer.valueOf(attacksInput.getText().toString());
-                session.skill = Integer.valueOf(skillInput.getText().toString());
+                session.attacks = CheckInput(attacksInput, 1, 500);
+                if(session.attacks == -2) {
+                    Toast.makeText(getApplicationContext(), "Attacks input must be between 1 and 500!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                session.skill = CheckInput(skillInput, 2, 6);
+                if(session.skill == -2) {
+                    Toast.makeText(getApplicationContext(), "Skill input must be between 1 and 6!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 session.hits = ToHit(session.attacks, session.skill);
 
+
                 // Read stength & toughness user inputs, and calculate number of wounds
-                session.strength = Integer.valueOf(strengthInput.getText().toString());
+                session.strength = CheckInput(strengthInput, 1, 16);
+                if(session.strength == -2) {
+                    Toast.makeText(getApplicationContext(), "Strength input must be between 1 and 16!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                session.strength = CheckInput(strengthInput, 1, 16);
+                if(session.strength == -2) {
+                    Toast.makeText(getApplicationContext(), "Strength input must be between 1 and 16!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+
                 session.toughness = Integer.valueOf(toughnessInput.getText().toString());
                 session.wounds = ToWound(session.strength, session.toughness, session.hits);
 
@@ -363,6 +386,20 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 result = -1;
         }
         Log.i("ModifierConvert", "ModifierConvert " + mod + " returns: " + result);
+        return result;
+    }
+
+    // Checks text input against null and input parameters. Returns -2 if null or out of range.
+    // Otherwise the actual input is returned
+    public int CheckInput(EditText input, int min, int max){
+        if(TextUtils.isEmpty(input.getText().toString().trim())) {
+            return -2;
+        }
+
+        int result = Integer.valueOf(input.getText().toString().trim());
+        if(result < min || result > max){
+            return -2;
+        }
         return result;
     }
 }

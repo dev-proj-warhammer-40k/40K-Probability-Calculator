@@ -101,7 +101,6 @@ public class HistoryActivity extends AppCompatActivity {
                 "damage:"       +   session.damage      + "\n" +
                 "finalDamage:"  +   session.finalDamage + "}\n";
 
-
         return result;
     }
 }
