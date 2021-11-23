@@ -6,6 +6,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -36,11 +38,11 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
 
         ConfigureBackButton();
-
+        PopulateTable(getApplicationContext());
     }
 
     // Reads history.txt into a string for application processing
-    public void ReadHistory(Context context){
+    public String ReadHistory(Context context){
         FileInputStream input = null;
 
         try {
@@ -53,13 +55,17 @@ public class HistoryActivity extends AppCompatActivity {
                 fileBuilder.append(file).append("\n");
             }
             Log.i("ReadHistory", "File contents: \n" + fileBuilder.toString());
+            return fileBuilder.toString();
         } catch (FileNotFoundException e) {
             Log.e("ReadHistory", "ERROR: FILE NOT FOUND! " + e);
         } catch (IOException e) {
             Log.e("ReadHistory", "ERROR: IOException! " + e);
         }
+        return "";
     }
 
+    // When calculate button is pressed, this function is called to save the current values of
+    // the calculation to the history.txt file
     public void AppendHistory(Context context) {
         FileOutputStream output = null;
 
@@ -82,9 +88,27 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
 
-        //TODO: remove, for testing only
+        //TODO: remove, for troubleshooting only
         ReadHistory(context);
+    }
 
+    private void PopulateTable(Context context){
+        LinearLayout historyLayout = (LinearLayout) findViewById(R.id.historyLayout);
+
+        int rows = 50; // total number of history entries possible in history linear layout
+        TextView[] layoutRows = new TextView[rows];
+        //for (int i = 1; i < rows; i++) {
+            // create a new textview
+            TextView rowTextView = new TextView(this);
+
+            rowTextView.setText(ReadHistory(context));
+
+
+            // add the textview to the linearlayout
+            historyLayout.addView(rowTextView);
+
+            // save a reference to the textview for later
+            //layoutRows[i] = rowTextView;
     }
 
     // Generates a string for entry into the history.txt file
