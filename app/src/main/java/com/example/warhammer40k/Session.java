@@ -5,8 +5,10 @@ public class Session {
     // User Inputs
     int attacks;
     int skill;
+    int hitMod;
     int strength;
     int toughness;
+    int woundMod;
     int armPen;
     int armSave;
     int invulnSave = 100;

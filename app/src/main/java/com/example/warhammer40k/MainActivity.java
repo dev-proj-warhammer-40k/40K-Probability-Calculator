@@ -10,23 +10,36 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity  {
 
+    public static boolean eighthEdition = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        configureNextButton();
+        configureButtons();
     }
 
 
-    private void configureNextButton(){
-        Button nextButton = (Button) findViewById(R.id.nextButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
+    private void configureButtons(){
+        Button ninthEditionButton = (Button) findViewById(R.id.ninthEditionButton);
+        Button eighthEditionButton = (Button) findViewById(R.id.eighthEditionButton);
+
+        ninthEditionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                    eighthEdition = false;
                     startActivity(new Intent(MainActivity.this, CalculatorActivity.class));
-                    Log.i("configureNextButton", "9th edition selected...");
+                    Log.i("configureButtons", "9th edition selected...");
+            }
+        });
+        eighthEditionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eighthEdition = true;
+                startActivity(new Intent(MainActivity.this, CalculatorActivity.class));
+                Log.i("configureButtons", "8th edition selected...");
             }
         });
         }
