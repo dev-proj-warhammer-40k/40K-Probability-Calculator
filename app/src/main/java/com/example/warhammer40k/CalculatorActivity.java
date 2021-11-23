@@ -1,5 +1,6 @@
 package com.example.warhammer40k;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,10 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 
 /*
 * CALCULATORACTIVITY CLASS
@@ -51,6 +52,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     EditText armSaveInput;
     EditText invulnSaveInput;
     EditText feelNoPainInput;
+    TextView titleView;
 
     // Button variables
     CheckBox toHitPlusOneCheckBox;
@@ -69,6 +71,17 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     Spinner damageSpinner;
     Spinner damageModSpinner;
 
+    //Declaring variables for popup window
+    private AlertDialog.Builder DB;
+    private AlertDialog dialog;
+    private TextView based, result;
+    private Button saveResult, resetFields;
+
+    // Declaring variables for popup quick tips
+    private AlertDialog.Builder DB2;
+    private AlertDialog dialogPop;
+    private TextView tipsPopup;
+    private Button buttonHitting, buttonWounding, buttonSaves;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +103,11 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         ConfigureEdition();
 
         Log.i("onCreate", "initializations complete...");
+
+         // Tips Button initializations
+        configureButtonHitting();
+        configureButtonWounding();
+        configureButtonSaves();
     }
 
     private void ConfigureInputs() {
@@ -143,7 +161,10 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     // If eighth edition is selected, hide modifier checkboxes and display text input instead.
     // If ninth edition is selected, do the opposite. Depends on bool set in MainActivity.
     private void ConfigureEdition() {
+        titleView = (TextView) findViewById(R.id.titleView);
+
         if (MainActivity.eighthEdition) {
+            titleView.setText("8th Edition Calculator");
             toHitPlusOneCheckBox.setVisibility(View.INVISIBLE);
             toHitMinusOneCheckBox.setVisibility(View.INVISIBLE);
             toWoundPlusOneCheckBox.setVisibility(View.INVISIBLE);
@@ -153,6 +174,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
             woundModifierInput.setVisibility(View.VISIBLE);
             Log.i("ConfigureEdition", "Eighth Edition Calculator Initialized...");
         } else {
+            titleView.setText("9th Edition Calculator");
             toHitPlusOneCheckBox.setVisibility(View.VISIBLE);
             toHitMinusOneCheckBox.setVisibility(View.VISIBLE);
             toWoundPlusOneCheckBox.setVisibility(View.VISIBLE);
@@ -308,8 +330,11 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 historyEntry.entry = historyEntry.generateString(session);
                 historyEntry.AppendHistory(getApplicationContext());
 
-                //TODO: DISPLAY RESULT
-                Toast.makeText(getApplicationContext(), "" + session.finalDamage, Toast.LENGTH_LONG).show();
+                //Display Result
+                createNewContactDialog();
+
+                TextView t = (TextView) findViewById(R.id.result);
+                result.setText("Result: " + session.finalDamage);
             }
         });
         Log.i("configCalculateButton", "calculateButton initialized...");
@@ -564,6 +589,93 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         Log.i("ProcessUserInput", msg + " input processed. Result: " + result);
         return result;
     }
+    public void createNewContactDialog(){
+        DB = new AlertDialog.Builder(this);
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.popup, null);
+        based = (TextView) contactPopupView.findViewById(R.id.definitionPopup);
+        result = (TextView) contactPopupView.findViewById(R.id.result);
+
+
+        saveResult = (Button) contactPopupView.findViewById(R.id.saveResult);
+        resetFields = (Button) contactPopupView.findViewById(R.id.resetFields);
+
+        DB.setView(contactPopupView);
+        dialog = DB.create();
+        dialog.show();
+
+
+        saveResult.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //define save button to save into SAVED RESULTS
+            }
+        });
+        resetFields.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //define reset fields button to reset ALL FIELDS in calculator
+            }
+        });
+        //result = "Result "+ result.setText(toString(session.finalDamage));
+
+    }
+     public void quickTipsPopup(){
+        DB2 = new AlertDialog.Builder(this);
+        final View tipsPopupView = getLayoutInflater().inflate(R.layout.tipspop, null);
+        tipsPopup = (TextView) tipsPopupView.findViewById(R.id.tipsPopup);
+
+
+        DB2.setView(tipsPopupView);
+        dialogPop = DB2.create();
+        dialogPop.show();
+
+    }
+
+    private void configureButtonHitting(){
+        buttonHitting = (Button) findViewById(R.id.buttonHitting);
+        buttonHitting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Start popup
+                quickTipsPopup();
+
+                //Editing popup TextView
+                String hitting = getString(R.string.hitting);
+                TextView t = (TextView) findViewById(R.id.tipsPopup);
+                tipsPopup.setText(hitting);
+            }
+        });}
+
+    private void configureButtonWounding(){
+        buttonWounding = (Button) findViewById(R.id.buttonWounding);
+        buttonWounding.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                quickTipsPopup();
+
+                String wounding = getString(R.string.wounding);
+                TextView t = (TextView) findViewById(R.id.tipsPopup);
+                tipsPopup.setText(wounding);
+
+
+            }
+        });}
+    private void configureButtonSaves(){
+        buttonSaves = (Button) findViewById(R.id.buttonSaves);
+        buttonSaves.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                quickTipsPopup();
+
+                String saves = getString(R.string.saves);
+                TextView t = (TextView) findViewById(R.id.tipsPopup);
+                tipsPopup.setText(saves);
+
+            }
+        });}
 }
 
 
