@@ -19,6 +19,8 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     // Text box variables
     EditText attacksInput;
     EditText skillInput;
+    EditText hitModifierInput;
+    EditText woundModifierInput;
     EditText strengthInput;
     EditText toughnessInput;
     EditText armPenInput;
@@ -48,23 +50,28 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         setContentView(R.layout.activity_primary_calc);
 
         // Text inputs & checkboxes initialization
-        configureInputs();
-        configureCheckBoxes();
+        ConfigureInputs();
+        ConfigureCheckBoxes();
 
         // Button Initializations & Listeners
-        configureCalculateButton();
-        configureBackButton();
+        ConfigureCalculateButton();
+        ConfigureBackButton();
 
         // Spinner initializations
-        configureSpinners();
+        ConfigureSpinners();
+
+        // Set UI object visibility depending on item selection
+        ConfigureEdition();
 
         Log.i("onCreate", "initializations complete...");
     }
 
-    private void configureInputs(){
+    private void ConfigureInputs(){
         // Text box initializations
         attacksInput = (EditText) findViewById(R.id.attacksInput);
         skillInput = (EditText) findViewById(R.id.skillInput);
+        hitModifierInput = (EditText) findViewById(R.id.hitModifierInput);
+        woundModifierInput = (EditText) findViewById(R.id.woundModifierInput);
         strengthInput = (EditText) findViewById(R.id.strengthInput);
         toughnessInput = (EditText) findViewById(R.id.toughnessInput);
         armPenInput = (EditText) findViewById(R.id.armPenInput);
@@ -74,7 +81,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         Log.i("configureInputs", "text boxes initialized...");
     }
 
-    private void configureCheckBoxes(){
+    private void ConfigureCheckBoxes(){
         toHitPlusOneCheckBox = (CheckBox) findViewById(R.id.toHitPlusOneCheckBox);
         toHitMinusOneCheckBox = (CheckBox) findViewById(R.id.toHitMinusOneCheckBox);
         toHitRerollOnesCheckBox = (CheckBox) findViewById(R.id.toHitRerollOnesCheckBox);
@@ -86,7 +93,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         Log.i("configureCheckBoxes", "checkboxes initialized...");
     }
 
-    private void configureSpinners(){
+    private void ConfigureSpinners(){
         //Spinner for damage
         damageSpinner = findViewById(R.id.damageSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.damageNum, android.R.layout.simple_spinner_item);
@@ -102,11 +109,34 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         damageModSpinner.setAdapter(adapter2);
         damageModSpinner.setOnItemSelectedListener(this);
+        damageModSpinner.setSelection(1); // sets default position to 0
         Log.i("configureSpinners", "damageModSpinner initialized...");
 
     }
 
-    private void configureBackButton(){
+    // If eighth edition is selected, hide modifier checkboxes and display text input instead.
+    // If ninth edition is selected, do the opposite. Depends on bool set in MainActivity.
+    private void ConfigureEdition(){
+        if(MainActivity.eighthEdition) {
+            toHitPlusOneCheckBox.setVisibility(View.INVISIBLE);
+            toHitMinusOneCheckBox.setVisibility(View.INVISIBLE);
+            toWoundPlusOneCheckBox.setVisibility(View.INVISIBLE);
+            toWoundMinusOneCheckBox.setVisibility(View.INVISIBLE);
+
+            hitModifierInput.setVisibility(View.VISIBLE);
+            woundModifierInput.setVisibility(View.VISIBLE);
+        }else{
+            toHitPlusOneCheckBox.setVisibility(View.VISIBLE);
+            toHitMinusOneCheckBox.setVisibility(View.VISIBLE);
+            toWoundPlusOneCheckBox.setVisibility(View.VISIBLE);
+            toWoundMinusOneCheckBox.setVisibility(View.VISIBLE);
+
+            hitModifierInput.setVisibility(View.INVISIBLE);
+            woundModifierInput.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void ConfigureBackButton(){
         backButton = (Button) findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +148,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         }
 
         // This button triggers all of the user input retrieval, input error handling, and calculator function calls
-    private void configureCalculateButton(){
+    private void ConfigureCalculateButton(){
         calculateButton = (Button) findViewById(R.id.calculateButton);
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,17 +169,36 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 session.skill = ProcessUserInput(skillInput, "Skills", 2, 6);
                 if(session.skill == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
-                session.hits = ToHit(session.attacks, session.skill);
+
+                // Eighth vs. ninth edition processing
+                if(MainActivity.eighthEdition){
+                    session.hitMod  = ProcessUserInput(hitModifierInput, "Hit Modifier", -4, 4);
+                    if(session.hitMod == -10)
+                        return; // Ends calculation if input is out of bounds (-10 is an error code)
+                    session.hits = ToHitEighthEdition(session.attacks, session.skill, session.hitMod);
+                }else{
+                    session.hits = ToHitNinthEdition(session.attacks, session.skill);
+                }
 
 
                 // Read stength & toughness user inputs, and calculate number of wounds
                 session.strength = ProcessUserInput(strengthInput, "Strength", 1, 16);
                 if(session.strength == -10)
-                    return;
+                    return; // Ends calculation if input is out of bounds (-10 is an error code)
                 session.toughness = ProcessUserInput(toughnessInput, "Toughness", 1, 16);
                 if(session.toughness == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
-                session.wounds = ToWound(session.strength, session.toughness, session.hits);
+
+                // Eighth vs. ninth edition processing
+                if(MainActivity.eighthEdition){
+                    session.woundMod  = ProcessUserInput(woundModifierInput, "Wound Modifier", -4, 4);
+                    if(session.hitMod == -10)
+                        return; // Ends calculation if input is out of bounds (-10 is an error code)
+
+                    session.wounds = ToWoundEighthEdition(session.strength, session.toughness, session.hits, session.woundMod);
+                }else{
+                    session.wounds = ToWoundNinthEdition(session.strength, session.toughness, session.hits);
+                }
 
                 // Read saves & damage user inputs, and calculate final damage
                 session.armSave = ProcessUserInput(armSaveInput, "Armor Save", 2, 6);
@@ -202,14 +251,9 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         return;
     }
 
-    // takes the number of attacks and skill (user input), and calculates the number of hits
-    public double ToHit(int attacks, int skill) {
+    // (Ninth Edition) takes the number of attacks and skill (user input), and calculates the number of hits
+    public double ToHitNinthEdition(int attacks, int skill) {
         double result = -1;
-
-        // make sure skill is in correct range
-        if (skill < 2 || skill > 6) {
-            Log.e("ToHit","SKILL NOT IN RANGE");
-        }
 
         // check if +1/-1 modifier radios are ticked
         if (toHitPlusOneCheckBox.isChecked() && toHitMinusOneCheckBox.isChecked()) {
@@ -231,11 +275,32 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         }
 
         result *= attacks;
-        Log.i("ToHit","ToHit calculates: hits = " + result);
+        Log.i("ToHitNinthEdition","ToHit calculates: hits = " + result);
         return result;
     }
 
-    public double ToWound(int strength, int toughness, double hits){
+    // (Eighth Edition) takes the number of attacks and skill (user input), and calculates the number of hits
+    public double ToHitEighthEdition(int attacks, int skill, int hitMod) {
+        double result = -1;
+        hitMod = hitMod * -1;
+
+        skill += hitMod;
+
+        // check if +1/-1 modifier radios are ticked
+        result = ModifierConvert(skill);
+
+        // check if reroll ones modifier radio is ticked
+        if (toHitRerollOnesCheckBox.isChecked()) {
+            result += 0.16;
+        }
+
+        result *= attacks;
+        Log.i("ToHitEighthEdition", "ToHit calculates: hits = " + result);
+        return result;
+    }
+
+    // (Ninth Edition) takes the number of attacks and skill (user input), and calculates the number of wounds
+    public double ToWoundNinthEdition(int strength, int toughness, double hits){
         double result = StrvTgh(strength, toughness);
 
         if(toWoundPlusOneCheckBox.isChecked() && toWoundMinusOneCheckBox.isChecked()){
@@ -257,7 +322,25 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         }
 
         result *= hits;
-        Log.i("ToWound","ToWound calculates: wounds = " + result);
+        Log.i("ToWoundNinthEdition","ToWound calculates: wounds = " + result);
+        return result;
+    }
+
+    // (Eighth Edition) takes the number of attacks and skill (user input), and calculates the number of wounds
+    public double ToWoundEighthEdition(int strength, int toughness, double hits, int woundMod){
+        double result = StrvTgh(strength, toughness);
+
+        woundMod = woundMod* -1;
+
+        result = ModifierConvert((int)result);
+
+        // check if reroll ones modifier radio is ticked
+        if(toWoundRerollOnesCheckBox.isChecked()) {
+            result += 0.16;
+        }
+
+        result *= hits;
+        Log.i("ToWoundEighthEdition","ToWound calculates: wounds = " + result);
         return result;
     }
 
