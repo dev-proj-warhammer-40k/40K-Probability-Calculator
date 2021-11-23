@@ -1,6 +1,7 @@
 package com.example.warhammer40k;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
@@ -25,6 +27,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -112,22 +116,36 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     // Generates a string for entry into the history.txt file
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public String generateString(Session session){
-
         String result = "";
 
-        result = "\n{attacks:"  +   session.attacks     + "\n" +
-                "skill:"        +   session.skill       + "\n" +
-                "strength:"     +   session.strength    + "\n" +
-                "toughness:"    +   session.toughness   + "\n" +
-                "armPen:"       +   session.armPen      + "\n" +
-                "armSave:"      +   session.armSave     + "\n" +
-                "invulnSave:"   +   session.invulnSave  + "\n" +
-                "feelNoPain:"   +   session.feelNoPain  + "\n" +
-                "hits:"         +   session.hits        + "\n" +
-                "wounds:"       +   session.wounds      + "\n" +
-                "damage:"       +   session.damage      + "\n" +
-                "finalDamage:"  +   session.finalDamage + "}\n";
+        //Get current date time
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+
+        //Get edition
+        String edition;
+        if (MainActivity.eighthEdition)
+            edition = " -- Eighth Edition";
+        else
+            edition = " -- Ninth Edition";
+
+
+        result = format.format(now) + edition + "\n" +
+                "----------------------------------------------------------\n" +
+                "attacks:  "        +   session.attacks     + "\n" +
+                "skill:  "          +   session.skill       + "\n" +
+                "strength:  "       +   session.strength    + "\n" +
+                "toughness:  "      +   session.toughness   + "\n" +
+                "armPen:  "         +   session.armPen      + "\n" +
+                "armSave:  "        +   session.armSave     + "\n" +
+                "invulnSave:  "     +   session.invulnSave  + "\n" +
+                "feelNoPain:  "     +   session.feelNoPain  + "\n" +
+                "hits:  "           +   session.hits        + "\n" +
+                "wounds:  "         +   session.wounds      + "\n" +
+                "damage:  "         +   session.damage      + "\n" +
+                "finalDamage:  "    +   session.finalDamage + "\n\n";
 
         return result;
     }
