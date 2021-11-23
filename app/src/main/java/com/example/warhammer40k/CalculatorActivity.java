@@ -343,7 +343,6 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -595,30 +594,9 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         based = (TextView) contactPopupView.findViewById(R.id.definitionPopup);
         result = (TextView) contactPopupView.findViewById(R.id.result);
 
-
-        saveResult = (Button) contactPopupView.findViewById(R.id.saveResult);
-        resetFields = (Button) contactPopupView.findViewById(R.id.resetFields);
-
         DB.setView(contactPopupView);
         dialog = DB.create();
         dialog.show();
-
-
-        saveResult.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                //define save button to save into SAVED RESULTS
-            }
-        });
-        resetFields.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //define reset fields button to reset ALL FIELDS in calculator
-            }
-        });
-        //result = "Result "+ result.setText(toString(session.finalDamage));
-
     }
      public void quickTipsPopup(){
         DB2 = new AlertDialog.Builder(this);
