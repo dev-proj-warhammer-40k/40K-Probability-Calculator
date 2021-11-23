@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity  {
         Button ninthEditionButton = (Button) findViewById(R.id.ninthEditionButton);
         Button eighthEditionButton = (Button) findViewById(R.id.eighthEditionButton);
         Button termButton = (Button) findViewById(R.id.termButton);
+        Button historyButton = (Button) findViewById(R.id.historyButton);
 
         ninthEditionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +82,13 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, TermsPage.class));
+            }
+        });
+
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
             }
         });
         }

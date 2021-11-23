@@ -13,6 +13,12 @@
             android:name=".CalculatorActivity"
             android:exported="false" />
         <activity
+            android:name=".TermsPage"
+            android:exported="false" />
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
