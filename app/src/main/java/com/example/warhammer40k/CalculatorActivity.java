@@ -14,6 +14,30 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
+/*
+* CALCULATORACTIVITY CLASS
+* -------------------------
+* DESCRIPTION:
+* The CalculatorActivity class is responsible for the primary
+* logic behind the Warhammer 40K probability calculations, as well as
+* the integration with the calculator user interface.
+*
+* On creation (when a calculator button is clicked in the MainActivity class),
+* the calculate initializes all UI elements. Afterwards, the user inputs all data before
+* pressing the "calculate" button.
+*
+* Once the calculate button is pressed, all input fields are checked to be within the set
+* parameters. This is done with a wrapper function called "ProcessUserInput" which returns
+* an error code if something isn't right. This triggers a popup (Toast message) with the error,
+* and how the user can correct it.
+*
+* If everything is entered properly, the CalculatorActivity class processes the data and generates
+* the statistical average result. During processing, user data and results are temporarily stored in
+* a "Session" class. This class is then passed to a HistoryActibity object, which stores data in
+* a file called history.txt. This file is internal to the app.
+* -------------------------
+ */
 public class CalculatorActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     // Text box variables
@@ -39,6 +63,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     CheckBox feelNoPainCheckBox;
     Button calculateButton;
     Button backButton;
+    Button resetButton;
 
     // Spinner variables
     Spinner damageSpinner;
@@ -47,7 +72,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_primary_calc);
+        setContentView(R.layout.activity_calculator);
 
         // Text inputs & checkboxes initialization
         ConfigureInputs();
@@ -56,6 +81,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         // Button Initializations & Listeners
         ConfigureCalculateButton();
         ConfigureBackButton();
+        ConfigureResetButton();
 
         // Spinner initializations
         ConfigureSpinners();
@@ -66,7 +92,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         Log.i("onCreate", "initializations complete...");
     }
 
-    private void ConfigureInputs(){
+    private void ConfigureInputs() {
         // Text box initializations
         attacksInput = (EditText) findViewById(R.id.attacksInput);
         skillInput = (EditText) findViewById(R.id.skillInput);
@@ -81,7 +107,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         Log.i("configureInputs", "text boxes initialized...");
     }
 
-    private void ConfigureCheckBoxes(){
+    private void ConfigureCheckBoxes() {
         toHitPlusOneCheckBox = (CheckBox) findViewById(R.id.toHitPlusOneCheckBox);
         toHitMinusOneCheckBox = (CheckBox) findViewById(R.id.toHitMinusOneCheckBox);
         toHitRerollOnesCheckBox = (CheckBox) findViewById(R.id.toHitRerollOnesCheckBox);
@@ -93,7 +119,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         Log.i("configureCheckBoxes", "checkboxes initialized...");
     }
 
-    private void ConfigureSpinners(){
+    private void ConfigureSpinners() {
         //Spinner for damage
         damageSpinner = findViewById(R.id.damageSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.damageNum, android.R.layout.simple_spinner_item);
@@ -116,8 +142,8 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
 
     // If eighth edition is selected, hide modifier checkboxes and display text input instead.
     // If ninth edition is selected, do the opposite. Depends on bool set in MainActivity.
-    private void ConfigureEdition(){
-        if(MainActivity.eighthEdition) {
+    private void ConfigureEdition() {
+        if (MainActivity.eighthEdition) {
             toHitPlusOneCheckBox.setVisibility(View.INVISIBLE);
             toHitMinusOneCheckBox.setVisibility(View.INVISIBLE);
             toWoundPlusOneCheckBox.setVisibility(View.INVISIBLE);
@@ -125,7 +151,8 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
 
             hitModifierInput.setVisibility(View.VISIBLE);
             woundModifierInput.setVisibility(View.VISIBLE);
-        }else{
+            Log.i("ConfigureEdition", "Eighth Edition Calculator Initialized...");
+        } else {
             toHitPlusOneCheckBox.setVisibility(View.VISIBLE);
             toHitMinusOneCheckBox.setVisibility(View.VISIBLE);
             toWoundPlusOneCheckBox.setVisibility(View.VISIBLE);
@@ -133,10 +160,11 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
 
             hitModifierInput.setVisibility(View.INVISIBLE);
             woundModifierInput.setVisibility(View.INVISIBLE);
+            Log.i("ConfigureEdition", "Ninth Edition Calculator Initialized...");
         }
     }
 
-    private void ConfigureBackButton(){
+    private void ConfigureBackButton() {
         backButton = (Button) findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,10 +173,57 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
             }
         });
         Log.i("configureBackButton", "backButton initialized...");
-        }
+    }
 
-        // This button triggers all of the user input retrieval, input error handling, and calculator function calls
-    private void ConfigureCalculateButton(){
+    // Resets all inputs to empty, checkboxes to unchecked, and spinners to defaults
+    private void ConfigureResetButton() {
+        resetButton = (Button) findViewById(R.id.resetButton);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Clear edittexts
+                attacksInput.getText().clear();
+                skillInput.getText().clear();
+                hitModifierInput.getText().clear();
+                strengthInput.getText().clear();
+                toughnessInput.getText().clear();
+                woundModifierInput.getText().clear();
+                armSaveInput.getText().clear();
+                armPenInput.getText().clear();
+                invulnSaveInput.getText().clear();
+                feelNoPainInput.getText().clear();
+                Log.i("configureResetButton", "Text inputs reset!");
+
+                //Clear checkboxes
+                if (toHitRerollOnesCheckBox.isChecked())
+                    toHitRerollOnesCheckBox.toggle();
+                if (toHitPlusOneCheckBox.isChecked())
+                    toHitPlusOneCheckBox.toggle();
+                if (toHitMinusOneCheckBox.isChecked())
+                    toHitMinusOneCheckBox.toggle();
+                if (toWoundRerollOnesCheckBox.isChecked())
+                    toWoundRerollOnesCheckBox.toggle();
+                if (toWoundPlusOneCheckBox.isChecked())
+                    toWoundPlusOneCheckBox.toggle();
+                if (toWoundMinusOneCheckBox.isChecked())
+                    toWoundMinusOneCheckBox.toggle();
+                if (feelNoPainCheckBox.isChecked())
+                    feelNoPainCheckBox.toggle();
+                if (invulnSaveCheckBox.isChecked())
+                    invulnSaveCheckBox.toggle();
+                Log.i("configureResetButton", "Checboxes reset!");
+
+                //Spinner defaults:
+                damageSpinner.setSelection(0);
+                damageModSpinner.setSelection(1);
+                Log.i("configureResetButton", "Spinners reset!");
+            }
+        });
+        Log.i("configureResetButton", "resetButton initialized...");
+    }
+
+    // This button triggers all of the user input retrieval, input error handling, and calculator function calls
+    private void ConfigureCalculateButton() {
         calculateButton = (Button) findViewById(R.id.calculateButton);
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,68 +239,68 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
 
                 // Read attacks & skill user inputs, and calculate number of hits.
                 session.attacks = ProcessUserInput(attacksInput, "Attacks", 1, 500);
-                if(session.attacks == -10)
+                if (session.attacks == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
                 session.skill = ProcessUserInput(skillInput, "Skills", 2, 6);
-                if(session.skill == -10)
+                if (session.skill == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
 
                 // Eighth vs. ninth edition processing
-                if(MainActivity.eighthEdition){
-                    session.hitMod  = ProcessUserInput(hitModifierInput, "Hit Modifier", -4, 4);
-                    if(session.hitMod == -10)
+                if (MainActivity.eighthEdition) {
+                    session.hitMod = ProcessUserInput(hitModifierInput, "Hit Modifier", -4, 4);
+                    if (session.hitMod == -10)
                         return; // Ends calculation if input is out of bounds (-10 is an error code)
                     session.hits = ToHitEighthEdition(session.attacks, session.skill, session.hitMod);
-                }else{
+                } else {
                     session.hits = ToHitNinthEdition(session.attacks, session.skill);
                 }
 
 
                 // Read stength & toughness user inputs, and calculate number of wounds
                 session.strength = ProcessUserInput(strengthInput, "Strength", 1, 16);
-                if(session.strength == -10)
+                if (session.strength == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
                 session.toughness = ProcessUserInput(toughnessInput, "Toughness", 1, 16);
-                if(session.toughness == -10)
+                if (session.toughness == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
 
                 // Eighth vs. ninth edition processing
-                if(MainActivity.eighthEdition){
-                    session.woundMod  = ProcessUserInput(woundModifierInput, "Wound Modifier", -4, 4);
-                    if(session.hitMod == -10)
+                if (MainActivity.eighthEdition) {
+                    session.woundMod = ProcessUserInput(woundModifierInput, "Wound Modifier", -4, 4);
+                    if (session.hitMod == -10)
                         return; // Ends calculation if input is out of bounds (-10 is an error code)
 
                     session.wounds = ToWoundEighthEdition(session.strength, session.toughness, session.hits, session.woundMod);
-                }else{
+                } else {
                     session.wounds = ToWoundNinthEdition(session.strength, session.toughness, session.hits);
                 }
 
                 // Read saves & damage user inputs, and calculate final damage
                 session.armSave = ProcessUserInput(armSaveInput, "Armor Save", 2, 6);
-                if(session.armSave == -10)
+                if (session.armSave == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
                 session.armPen = ProcessUserInput(armPenInput, "Armor Penetration", -5, 0);
-                if(session.armPen == -10)
+                if (session.armPen == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
 
                 // Reads in indexes of damage spinners, and calculates initial damage
                 session.damage = DamageInput();
 
                 // Invulnerable save and feel no pain are optional. Checks inputs depending on user selection.
-                if(invulnSaveCheckBox.isChecked()) {
+                if (invulnSaveCheckBox.isChecked()) {
                     session.invulnSave = ProcessUserInput(invulnSaveInput, "Invulnerable Save", 2, 6);
-                    if(session.invulnSave == -10)
+                    if (session.invulnSave == -10)
                         return; // Ends calculation if input is out of bounds (-10 is an error code)
                 }
-                if(feelNoPainCheckBox.isChecked()){
+                if (feelNoPainCheckBox.isChecked()) {
                     session.feelNoPain = ProcessUserInput(feelNoPainInput, "Feel No Pain", 2, 6);
-                    if(session.invulnSave == -10)
+                    if (session.invulnSave == -10)
                         return; // Ends calculation if input is out of bounds (-10 is an error code)
                 }
 
                 // Calculates the final damage based on user inputs
                 session.finalDamage = FinalDamage(session.damage, session.armPen, session.armSave,
-                                        session.invulnSave, (int)session.wounds, session.feelNoPain);
+                        session.invulnSave, (int) session.wounds, session.feelNoPain);
 
 
                 // Create new entry for history.txt and append file (for history logging feature)
@@ -264,7 +339,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
             skill++;
         }
 
-        if(skill >= 6)
+        if (skill >= 6)
             result = 0.16;
         else
             result = ModifierConvert(skill);
@@ -275,7 +350,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         }
 
         result *= attacks;
-        Log.i("ToHitNinthEdition","ToHit calculates: hits = " + result);
+        Log.i("ToHitNinthEdition", "ToHit calculates: hits = " + result);
         return result;
     }
 
@@ -300,86 +375,86 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     }
 
     // (Ninth Edition) takes the number of attacks and skill (user input), and calculates the number of wounds
-    public double ToWoundNinthEdition(int strength, int toughness, double hits){
+    public double ToWoundNinthEdition(int strength, int toughness, double hits) {
         double result = StrvTgh(strength, toughness);
 
-        if(toWoundPlusOneCheckBox.isChecked() && toWoundMinusOneCheckBox.isChecked()){
+        if (toWoundPlusOneCheckBox.isChecked() && toWoundMinusOneCheckBox.isChecked()) {
             //no modification takes place
-        } else if(toWoundPlusOneCheckBox.isChecked()){
+        } else if (toWoundPlusOneCheckBox.isChecked()) {
             result--;
-        } else if(toWoundMinusOneCheckBox.isChecked()){
+        } else if (toWoundMinusOneCheckBox.isChecked()) {
             result++;
         }
 
-        if(result >= 6)
+        if (result >= 6)
             result = 0.16;
         else
-            result = ModifierConvert((int)result);
+            result = ModifierConvert((int) result);
 
         // check if reroll ones modifier radio is ticked
-        if(toWoundRerollOnesCheckBox.isChecked()) {
+        if (toWoundRerollOnesCheckBox.isChecked()) {
             result += 0.16;
         }
 
         result *= hits;
-        Log.i("ToWoundNinthEdition","ToWound calculates: wounds = " + result);
+        Log.i("ToWoundNinthEdition", "ToWound calculates: wounds = " + result);
         return result;
     }
 
     // (Eighth Edition) takes the number of attacks and skill (user input), and calculates the number of wounds
-    public double ToWoundEighthEdition(int strength, int toughness, double hits, int woundMod){
+    public double ToWoundEighthEdition(int strength, int toughness, double hits, int woundMod) {
         double result = StrvTgh(strength, toughness);
 
-        woundMod = woundMod* -1;
+        woundMod = woundMod * -1;
 
-        result = ModifierConvert((int)result);
+        result = ModifierConvert((int) result);
 
         // check if reroll ones modifier radio is ticked
-        if(toWoundRerollOnesCheckBox.isChecked()) {
+        if (toWoundRerollOnesCheckBox.isChecked()) {
             result += 0.16;
         }
 
         result *= hits;
-        Log.i("ToWoundEighthEdition","ToWound calculates: wounds = " + result);
+        Log.i("ToWoundEighthEdition", "ToWound calculates: wounds = " + result);
         return result;
     }
 
     // Takes user input on damage spinner and damage modifier spinner, and returns the average
     // damage based on those selections.
-    public int DamageInput(){
+    public int DamageInput() {
         int result = -1;
 
         // Spinner selected array indexes
         int damageCase = damageSpinner.getSelectedItemPosition();
         int damageModCase = damageModSpinner.getSelectedItemPosition();
-        Log.i("damage case = ","" + damageCase);
-        Log.i("damage mod case = ","" + damageModCase);
+        Log.i("damage case = ", "" + damageCase);
+        Log.i("damage mod case = ", "" + damageModCase);
 
         // Map damageSpinner index onto actual damage value
-        if(damageCase > -1 && damageCase < 5){
+        if (damageCase > -1 && damageCase < 5) {
             result = damageCase + 1;
-        }else if (damageCase == 5){
+        } else if (damageCase == 5) {
             result = 2;
-        }else if (damageCase == 6 || damageCase == 7){
+        } else if (damageCase == 6 || damageCase == 7) {
             result = 4;
-        }else if (damageCase == 8){
+        } else if (damageCase == 8) {
             result = 7;
-        }else{
-            Log.e("DamageInput","damageCase out of range!" + damageCase);
+        } else {
+            Log.e("DamageInput", "damageCase out of range!" + damageCase);
         }
-        Log.i("DamageInput","damageCase returns: " + result);
+        Log.i("DamageInput", "damageCase returns: " + result);
 
         // Map damageModSpinner index onto actual damage value
-        if(damageModCase == -1){
+        if (damageModCase == -1) {
             result += -1;
-        }else if(damageModCase > -1 && damageModCase < 9){
+        } else if (damageModCase > -1 && damageModCase < 9) {
             result += damageModCase - 1;
-        }else{
-            Log.e("DamageInput","damageModCase out of range!" + damageModCase);
+        } else {
+            Log.e("DamageInput", "damageModCase out of range!" + damageModCase);
         }
-        Log.i("DamageInput","damageModCase returns: " + damageModCase);
+        Log.i("DamageInput", "damageModCase returns: " + damageModCase);
 
-        Log.i("DamageInput","DamageInput returns: " + result);
+        Log.i("DamageInput", "DamageInput returns: " + result);
         return result;
     }
 
@@ -388,33 +463,30 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         double result = -1;
 
         // damage cannot be 0, map to 1
-        if(damage == 0){
+        if (damage == 0) {
             damage = 1;
         }
 
         armPen *= -1;
         armSave += armPen;
 
-        if(invulnSaveCheckBox.isChecked() && armSave >= invulnSave) {
+        if (invulnSaveCheckBox.isChecked() && armSave >= invulnSave) {
             invulnSave = Integer.valueOf(invulnSaveInput.getText().toString());
             wounds *= 1 - ModifierConvert(invulnSave);
-        }else{
-            wounds *= 1- ModifierConvert(armSave);
+        } else {
+            wounds *= 1 - ModifierConvert(armSave);
         }
 
         damage *= wounds;
-        Log.i("FinalDamage","damage: " + damage);
+        Log.i("FinalDamage", "damage: " + damage);
 
-        if(feelNoPainCheckBox.isChecked()){
-            Log.i("FinalDamage","FNP checked");
+        if (feelNoPainCheckBox.isChecked()) {
+            Log.i("FinalDamage", "FNP checked");
             feelNoPain = Integer.valueOf(feelNoPainInput.getText().toString());
             damage *= 1 - ModifierConvert(feelNoPain);
         }
         result = damage;
         Log.i("Damage", "Damage calculates: finalDamage = " + result);
-
-        //TODO: REMOVE TOAST
-        Toast.makeText(this,"" + result,Toast.LENGTH_LONG).show();
         return result;
     }
 
@@ -426,11 +498,11 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         if (s == t) {
             result = 4;
         } else if (s >= t * 2) {
-            result =  2;
+            result = 2;
         } else if (s > t) {
             result = 3;
         } else if (s <= t / 2) {
-            result =  6;
+            result = 6;
         } else if (s < t) {
             result = 5;
         } else {
@@ -446,7 +518,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     public double ModifierConvert(int mod) {
         double result;
 
-        if(mod >= 7)
+        if (mod >= 7)
             return 0;
 
         switch (mod) {
@@ -476,15 +548,15 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
 
     // Wrapper function that checks text input against null and min/max parameters. Returns -10 if null or out of range (-10 is never used in the input fields).
     // Otherwise the actual input is returned to the caller
-    public int ProcessUserInput(EditText input, String msg, int min, int max){
-        if(TextUtils.isEmpty(input.getText().toString().trim())) {
+    public int ProcessUserInput(EditText input, String msg, int min, int max) {
+        if (TextUtils.isEmpty(input.getText().toString().trim())) {
             Toast.makeText(getApplicationContext(), msg + " input is empty!", Toast.LENGTH_LONG).show();
             Log.e("ProcessUserInput", msg + " input is empty!");
             return -10;
         }
 
         int result = Integer.valueOf(input.getText().toString().trim());
-        if(result < min || result > max){
+        if (result < min || result > max) {
             Toast.makeText(getApplicationContext(), msg + " input must be between " + min + " and " + max + "!", Toast.LENGTH_LONG).show();
             Log.e("ProcessUserInput", msg + " input must be between " + min + " and " + max + "!");
             return -10;
