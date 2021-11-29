@@ -23,7 +23,7 @@ public class Session {
     int woundMod;
     int armPen;
     int armSave;
-    int invulnSave;
+    int invulnSave = 100;
     int feelNoPain;
 
     // Results
