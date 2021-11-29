@@ -545,29 +545,36 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     public double ModifierConvert(int mod) {
         double result;
 
+        if(mod <= 0)
+            return 1;
         if (mod >= 7)
-            return 0;
-
-        switch (mod) {
-            case 1:
-            case 2:
-                result = .83;
-                break;
-            case 3:
-                result = .66;
-                break;
-            case 4:
-                result = .5;
-                break;
-            case 5:
-                result = .33;
-                break;
-            case 6:
-                result = .16;
-                break;
-            default:
-                Log.e("ModifierConvert", "'Mod' Out of range! " + mod);
-                result = -1;
+            result = 0;
+        else {
+            switch (mod) {
+                case 1:
+                    if(MainActivity.eighthEdition) {
+                        result = 1;
+                        break;
+                    }
+                case 2:
+                    result = .83;
+                    break;
+                case 3:
+                    result = .66;
+                    break;
+                case 4:
+                    result = .5;
+                    break;
+                case 5:
+                    result = .33;
+                    break;
+                case 6:
+                    result = .16;
+                    break;
+                default:
+                    Log.e("ModifierConvert", "'Mod' Out of range! " + mod);
+                    result = -1;
+            }
         }
         Log.i("ModifierConvert", "ModifierConvert " + mod + " returns: " + result);
         return result;
