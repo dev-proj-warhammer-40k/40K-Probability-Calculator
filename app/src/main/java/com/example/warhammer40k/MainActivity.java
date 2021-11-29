@@ -11,6 +11,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+/*
+ * MAINACTIVITY CLASS
+ * -------------------------
+ * DESCRIPTION:
+ * Contains app settings as well as buttons to route the user
+ * to the different pages of the app.
+ * -------------------------
+ */
+
 public class MainActivity extends AppCompatActivity  {
     //Declaring variables for Dark/Light Mode
     private RadioGroup radioGroup;

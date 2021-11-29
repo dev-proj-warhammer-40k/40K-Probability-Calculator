@@ -30,6 +30,16 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/*
+ * HISTORYACTIVITY CLASS
+ * -------------------------
+ * DESCRIPTION:
+ * Contains methods for creating a history text file (internal to the app),
+ * appending that text file, and also for opening that text file and displaying
+ * it in a view on the history activity.
+ * -------------------------
+ */
+
 public class HistoryActivity extends AppCompatActivity {
 
     static String fileName = "history.txt";
