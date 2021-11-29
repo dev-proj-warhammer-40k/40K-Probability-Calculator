@@ -8,17 +8,26 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+/*
+ * MAINACTIVITY CLASS
+ * -------------------------
+ * DESCRIPTION:
+ * Contains app settings as well as buttons to route the user
+ * to the different pages of the app.
+ * -------------------------
+ */
+
 public class MainActivity extends AppCompatActivity  {
-
-
-
     //Declaring variables for Dark/Light Mode
     private RadioGroup radioGroup;
     private TextView select;
+
+    private boolean isCheckedValue;
+
+    public static boolean eighthEdition = false;
 
 
     @Override
@@ -26,8 +35,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        configureNextButton();
-
+        configureButtons();
         radioGroup = findViewById(R.id.darkLightMode);
         select = findViewById(R.id.textView9);
 
@@ -53,31 +61,45 @@ public class MainActivity extends AppCompatActivity  {
                 }
             }
         });
-
-
     }
 
 
-    private void configureNextButton(){
-        Button nextButton = (Button) findViewById(R.id.nextButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
+    private void configureButtons(){
+        Button ninthEditionButton = (Button) findViewById(R.id.ninthEditionButton);
+        Button eighthEditionButton = (Button) findViewById(R.id.eighthEditionButton);
+        Button termButton = (Button) findViewById(R.id.termButton);
+        Button historyButton = (Button) findViewById(R.id.historyButton);
+
+        ninthEditionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                    eighthEdition = false;
                     startActivity(new Intent(MainActivity.this, CalculatorActivity.class));
-                    Log.i("configureNextButton", "9th edition selected...");
+                    Log.i("configureButtons", "9th edition selected...");
             }
         });
-
-        Button termButton = (Button) findViewById(R.id.termButton);
+        eighthEditionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eighthEdition = true;
+                startActivity(new Intent(MainActivity.this, CalculatorActivity.class));
+                Log.i("configureButtons", "8th edition selected...");
+            }
+        });
+        
         termButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, TermsPage.class));
             }
         });
+
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+            }
+        });
         }
 
-
-
 }
-
