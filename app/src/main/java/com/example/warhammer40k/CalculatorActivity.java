@@ -1,6 +1,7 @@
 package com.example.warhammer40k;
 
 import android.app.AlertDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 /*
@@ -108,6 +110,9 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         configureButtonHitting();
         configureButtonWounding();
         configureButtonSaves();
+
+        //splash screen config
+
     }
 
     private void ConfigureInputs() {
@@ -248,6 +253,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     private void ConfigureCalculateButton() {
         calculateButton = (Button) findViewById(R.id.calculateButton);
         calculateButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 Log.i("configCalculateButton", "\"calculate\" button pressed...");
@@ -267,7 +273,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 if (session.skill == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
 
-                // Eighth vs. ninth edition processing
+                // Eighth vs. ninth edition processing for htis
                 if (MainActivity.eighthEdition) {
                     session.hitMod = ProcessUserInput(hitModifierInput, "Hit Modifier", -4, 4);
                     if (session.hitMod == -10)
@@ -286,12 +292,11 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 if (session.toughness == -10)
                     return; // Ends calculation if input is out of bounds (-10 is an error code)
 
-                // Eighth vs. ninth edition processing
+                // Eighth vs. ninth edition processing for wounds
                 if (MainActivity.eighthEdition) {
                     session.woundMod = ProcessUserInput(woundModifierInput, "Wound Modifier", -4, 4);
-                    if (session.hitMod == -10)
+                    if (session.woundMod == -10)
                         return; // Ends calculation if input is out of bounds (-10 is an error code)
-
                     session.wounds = ToWoundEighthEdition(session.strength, session.toughness, session.hits, session.woundMod);
                 } else {
                     session.wounds = ToWoundNinthEdition(session.strength, session.toughness, session.hits);
@@ -316,7 +321,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
                 }
                 if (feelNoPainCheckBox.isChecked()) {
                     session.feelNoPain = ProcessUserInput(feelNoPainInput, "Feel No Pain", 2, 6);
-                    if (session.invulnSave == -10)
+                    if (session.feelNoPain == -10)
                         return; // Ends calculation if input is out of bounds (-10 is an error code)
                 }
 
@@ -381,7 +386,7 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     // (Eighth Edition) takes the number of attacks and skill (user input), and calculates the number of hits
     public double ToHitEighthEdition(int attacks, int skill, int hitMod) {
         double result = -1;
-        hitMod = hitMod * -1;
+        hitMod *= -1;
 
         skill += hitMod;
 
@@ -428,10 +433,11 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
     // (Eighth Edition) takes the number of attacks and skill (user input), and calculates the number of wounds
     public double ToWoundEighthEdition(int strength, int toughness, double hits, int woundMod) {
         double result = StrvTgh(strength, toughness);
+        woundMod *= -1;
 
-        woundMod = woundMod * -1;
+        result += woundMod;
 
-        result = ModifierConvert((int) result);
+        result = ModifierConvert((int)result);
 
         // check if reroll ones modifier radio is ticked
         if (toWoundRerollOnesCheckBox.isChecked()) {
@@ -654,6 +660,9 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
 
             }
         });}
+
+
+
 }
 
 
