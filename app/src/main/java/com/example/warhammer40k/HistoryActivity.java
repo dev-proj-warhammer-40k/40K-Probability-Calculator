@@ -103,7 +103,7 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         //TODO: remove, for troubleshooting only
-        //ReadHistory(context);
+        ReadHistory(context);
     }
 
     private void PopulateTable(Context context){

@@ -110,6 +110,9 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
         configureButtonHitting();
         configureButtonWounding();
         configureButtonSaves();
+
+        //splash screen config
+
     }
 
     private void ConfigureInputs() {
@@ -664,6 +667,9 @@ public class CalculatorActivity extends AppCompatActivity implements AdapterView
 
             }
         });}
+
+
+
 }
 
 

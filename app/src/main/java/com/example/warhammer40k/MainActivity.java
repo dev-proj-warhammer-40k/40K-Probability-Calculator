@@ -2,9 +2,12 @@ package com.example.warhammer40k;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         configureButtons();
         radioGroup = findViewById(R.id.darkLightMode);
@@ -101,5 +106,37 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
         }
+
+
+    public class SplashScreenActivity extends AppCompatActivity {
+
+        ImageView imageView;
+        TextView splashText;
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            setContentView(R.layout.splashscreen);
+
+
+            ImageView imageView = findViewById(R.id.splashImage);
+            TextView splashText = findViewById(R.id.splashText);
+
+
+
+
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    Intent intent = new Intent(MainActivity.this, com.example.warhammer40k.SplashScreenActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 3000);
+        }
+
+    }
 
 }
